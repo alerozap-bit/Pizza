@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Pizza</title>
 <meta name="theme-color" content="#b23a22">
+<script>
+try{ var __t=localStorage.getItem('pizzaRomana.theme'); if(__t==='light'||__t==='dark') document.documentElement.setAttribute('data-theme',__t); }catch(e){}
+</script>
 <style>
 :root{
   --bg:#f7f1e6; --card:#fffaf2; --ink:#2b211a; --muted:#7a6a5c; --line:#e6d9c5;
@@ -33,6 +36,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system
 header{padding:18px 16px 6px;max-width:1100px;margin:0 auto}
 header h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
 header p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+.hdr-top{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.theme-seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;background:var(--card)}
+.theme-seg button{border:0;background:transparent;color:var(--muted);font:inherit;font-size:.8rem;font-weight:600;padding:5px 11px;border-radius:999px;cursor:pointer;min-height:30px}
+.theme-seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.theme-seg button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
 nav .in{max-width:1100px;margin:0 auto;display:flex;gap:4px;padding:8px 12px;overflow-x:auto}
 nav button{flex:1 0 auto;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.9rem;font-weight:600;padding:8px 9px;border-radius:999px;cursor:pointer}
@@ -133,7 +141,7 @@ dialog h2{margin:0 0 12px;font-size:1.1rem}
 body:not(.embedded) .embed-only{display:none!important}
 @media print{
   body{background:#fff;color:#000;font-size:12px}
-  nav,.sticky-cta,.no-print,#tab-datos,#tab-historial,#tab-ajustes,.btns,details{display:none!important}
+  .theme-seg,nav,.sticky-cta,.no-print,#tab-datos,#tab-historial,#tab-ajustes,.btns,details{display:none!important}
   section.tab{display:block!important}
   .card,.kpi{box-shadow:none;border-color:#ccc;break-inside:avoid;background:#fff}
   .print-only{display:block}
@@ -143,7 +151,14 @@ body:not(.embedded) .embed-only{display:none!important}
 </head>
 <body>
 <header>
-  <h1>🍕 Pizza</h1>
+  <div class="hdr-top">
+    <h1>🍕 Pizza</h1>
+    <div class="theme-seg" role="group" aria-label="Aspecto de la app">
+      <button type="button" data-theme-set="auto" aria-pressed="false">Auto</button>
+      <button type="button" data-theme-set="light" aria-pressed="false">Día</button>
+      <button type="button" data-theme-set="dark" aria-pressed="false">Noche</button>
+    </div>
+  </div>
   <p id="hdrSum">Calculadora y planificador de masa · tonda, teglia, pala y napoletana</p>
 </header>
 <nav><div class="in">
@@ -1097,7 +1112,7 @@ function showTab(name){
   $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
   $$('section.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+name));
   $('#cta').hidden = name!=='datos';
-  try{ sessionStorage.setItem('pizzaTab',name); }catch(e){}
+  try{ sessionStorage.setItem('pizzaRomana.tab',name); }catch(e){}
   window.scrollTo({top:0});
 }
 document.addEventListener('input',e=>{
@@ -1123,13 +1138,27 @@ $('#durReset').addEventListener('click',()=>{ delete S.inp.dur[S.inp.type]; $('#
 $('#resetSettings').addEventListener('click',e=>{ if(ask('¿Restaurar los ajustes por defecto?', e.currentTarget)){ S.set=clone(DEF_SET); save(); fillInputs(); render(); } });
 $('#resetAll').addEventListener('click',e=>{ if(ask('¿Borrar TODO (datos, perfiles e historial)? Exporta antes si quieres copia.', e.currentTarget)){ S=defaults(); save(); fillInputs(); render(); } });
 
+/* ===================== Tema (auto / día / noche) ===================== */
+const THEME_KEY='pizzaRomana.theme';
+function applyTheme(mode){
+  const root=document.documentElement;
+  if(mode==='light'||mode==='dark') root.setAttribute('data-theme',mode); else root.removeAttribute('data-theme');
+  $$('[data-theme-set]').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.themeSet===(mode==='light'||mode==='dark'?mode:'auto'))));
+  const dark = mode==='dark' || (mode!=='light' && window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches);
+  const m=document.querySelector('meta[name="theme-color"]'); if(m) m.content = dark ? '#1b1612' : '#b23a22';
+}
+function setTheme(mode){ try{ if(mode==='auto') localStorage.removeItem(THEME_KEY); else localStorage.setItem(THEME_KEY,mode); }catch(e){} applyTheme(mode); }
+document.addEventListener('click',e=>{ const b=e.target.closest('[data-theme-set]'); if(b) setTheme(b.dataset.themeSet); });
+try{ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{ let m='auto'; try{ m=localStorage.getItem(THEME_KEY)||'auto'; }catch(e){} applyTheme(m); }); }catch(e){}
+
 /* ===================== Inicio ===================== */
 (function init(){
+  { let m='auto'; try{ m=localStorage.getItem(THEME_KEY)||'auto'; }catch(e){} applyTheme(m); }
   try{ if(window.self!==window.top) document.body.classList.add('embedded'); }catch(e){ document.body.classList.add('embedded'); }
   $('#oven').innerHTML=Object.entries(OVENS).map(([k,o])=>`<option value="${k}">${o.name}</option>`).join('');
   $('#typeSeg').innerHTML=Object.entries(TYPES).map(([k,t],i)=>`<input type="radio" name="type" id="ty${i}" value="${k}" data-bind="inp.type"><label for="ty${i}"><b>${t.name}</b><small>${t.sub}</small></label>`).join('');
   ensureDates(); fillInputs(); render();
-  let tab='datos'; try{ tab=sessionStorage.getItem('pizzaTab')||'datos'; }catch(e){}
+  let tab='datos'; try{ tab=sessionStorage.getItem('pizzaRomana.tab')||'datos'; }catch(e){}
   showTab(tab);
 })();
 </script>

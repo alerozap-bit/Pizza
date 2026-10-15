@@ -1,0 +1,1137 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pizza</title>
+<meta name="theme-color" content="#b23a22">
+<style>
+:root{
+  --bg:#f7f1e6; --card:#fffaf2; --ink:#2b211a; --muted:#7a6a5c; --line:#e6d9c5;
+  --accent:#b23a22; --accent-ink:#fff; --accent-soft:#f6ddd2; --basil:#3f6b3a; --basil-soft:#dfead8;
+  --warn:#9a5b00; --warn-soft:#fbecc8; --bad:#a3261a; --bad-soft:#f8d9d4; --info-soft:#e4ecf3; --info:#2e5574;
+  --radius:14px; --shadow:0 1px 2px rgba(60,40,20,.06),0 4px 14px rgba(60,40,20,.06);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#1b1612; --card:#26201a; --ink:#f1e7da; --muted:#a8998a; --line:#3a3027;
+    --accent:#e0664a; --accent-ink:#1b1612; --accent-soft:#3d2219; --basil:#8fbf85; --basil-soft:#24321f;
+    --warn:#f0b54a; --warn-soft:#3a2d12; --bad:#f08a7c; --bad-soft:#3e1d18; --info-soft:#1d2a35; --info:#9cc3e4;
+    --shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#1b1612; --card:#26201a; --ink:#f1e7da; --muted:#a8998a; --line:#3a3027;
+  --accent:#e0664a; --accent-ink:#1b1612; --accent-soft:#3d2219; --basil:#8fbf85; --basil-soft:#24321f;
+  --warn:#f0b54a; --warn-soft:#3a2d12; --bad:#f08a7c; --bad-soft:#3e1d18; --info-soft:#1d2a35; --info:#9cc3e4;
+  --shadow:none;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.45 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif}
+header{padding:18px 16px 6px;max-width:1100px;margin:0 auto}
+header h1{margin:0;font-size:1.5rem;letter-spacing:-.01em}
+header p{margin:2px 0 0;color:var(--muted);font-size:.9rem}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+nav .in{max-width:1100px;margin:0 auto;display:flex;gap:4px;padding:8px 12px;overflow-x:auto}
+nav button{flex:1 0 auto;border:0;background:transparent;color:var(--muted);font:inherit;font-size:.9rem;font-weight:600;padding:8px 9px;border-radius:999px;cursor:pointer}
+nav button.on{background:var(--accent);color:var(--accent-ink)}
+main{max-width:1100px;margin:0 auto;padding:12px 16px 80px}
+section.tab{display:none}
+section.tab.on{display:block}
+.grid{display:grid;gap:12px}
+.grid>*,.row>*,.seg>*,.kpis>*{min-width:0}
+@media (min-width:820px){.grid.two{grid-template-columns:1fr 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}
+.card h2{font-size:1.02rem;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+.card h2 .n{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-size:.78rem}
+.card h3{font-size:.95rem;margin:14px 0 6px}
+label{display:block;font-size:.84rem;color:var(--muted);margin:0 0 4px}
+.row{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(120px,100%),1fr));margin-bottom:10px}
+.row:last-child{margin-bottom:0}
+input,select,textarea{width:100%;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;min-height:42px}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:1px}
+.seg{position:relative;display:grid;gap:8px;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr))}
+.seg.three{grid-template-columns:repeat(3,1fr)}
+.seg input{position:absolute;opacity:0;pointer-events:none}
+.seg label{margin:0;cursor:pointer;overflow-wrap:anywhere;border:1.5px solid var(--line);border-radius:12px;padding:10px;color:var(--ink);background:var(--bg);font-size:.92rem;height:100%}
+.seg label b{display:block;font-size:.95rem}
+.seg label small{color:var(--muted);font-size:.78rem}
+.seg input:checked+label{border-color:var(--accent);background:var(--accent-soft)}
+.seg input:focus-visible+label{outline:2px solid var(--accent)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:600;padding:9px 14px;border-radius:10px;cursor:pointer;min-height:42px}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.sm{padding:5px 10px;min-height:32px;font-size:.85rem}
+.btn.ghost{background:transparent}
+.btns{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.hint{font-size:.82rem;color:var(--muted);margin:6px 0 0}
+.muted{color:var(--muted)}
+.big{font-size:2.2rem;font-weight:700;line-height:1.1;letter-spacing:-.02em}
+.kpis{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(min(130px,100%),1fr))}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px;box-shadow:var(--shadow)}
+.kpi .l{font-size:.78rem;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.kpi .v{font-size:1.6rem;font-weight:700;margin-top:2px}
+.kpi .s{font-size:.8rem;color:var(--muted)}
+table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+td,th{padding:9px 6px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:.78rem;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
+td.r,th.r{text-align:right;white-space:nowrap}
+td.g{font-weight:700;font-size:1.08rem}
+tr.total td{border-bottom:0;font-weight:700}
+tr.off td{color:var(--muted);text-decoration:line-through}
+.alerts{display:grid;gap:8px;margin-bottom:12px}
+.alert{border-radius:12px;padding:10px 12px;font-size:.9rem;border:1px solid transparent}
+.alert.warn{background:var(--warn-soft);color:var(--ink);border-color:color-mix(in srgb,var(--warn) 35%,transparent)}
+.alert.warn b{color:var(--warn)}
+.alert.bad{background:var(--bad-soft);border-color:color-mix(in srgb,var(--bad) 35%,transparent)}
+.alert.bad b{color:var(--bad)}
+.alert.info{background:var(--info-soft);border-color:color-mix(in srgb,var(--info) 30%,transparent)}
+.alert.info b{color:var(--info)}
+.badge{display:inline-block;font-size:.74rem;font-weight:700;padding:2px 8px;border-radius:999px;background:var(--basil-soft);color:var(--basil);vertical-align:middle}
+.badge.w{background:var(--warn-soft);color:var(--warn)}
+.badge.b{background:var(--bad-soft);color:var(--bad)}
+ul.why{margin:6px 0 0;padding-left:18px;font-size:.88rem;color:var(--muted)}
+ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 12px 38px;border-left:2px solid var(--line);margin-left:13px;padding-left:24px}
+ol.steps li:last-child{border-left-color:transparent}
+ol.steps li::before{content:counter(s);position:absolute;left:-14px;top:-2px;width:26px;height:26px;border-radius:50%;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;font-size:.8rem;font-weight:700}
+ol.steps li b.t{display:block;margin-bottom:2px}
+ol.steps li ul{margin:4px 0 0;padding-left:18px}
+ol.steps li ul li{border:0;padding:0 0 2px;margin:0;list-style:disc;counter-increment:none}
+ol.steps li ul li::before{display:none}
+.tl{display:grid;gap:0}
+.tl .it{display:grid;grid-template-columns:86px 1fr auto;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.tl .it:last-child{border-bottom:0}
+.tl .h{font-weight:700;font-variant-numeric:tabular-nums}
+.tl .h small{display:block;font-weight:500;color:var(--muted);font-size:.75rem}
+.tl .d{color:var(--muted);font-size:.85rem;white-space:nowrap}
+.tl .it.fr{background:var(--info-soft);margin:0 -14px;padding-left:14px;padding-right:14px}
+.tl .it.ev{color:var(--accent)}
+.tl .it.ev .h{color:var(--accent)}
+.tl .it.eat{font-weight:700}
+.inline{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.switch{display:flex;align-items:center;gap:10px;cursor:pointer;margin:0;color:var(--ink);font-size:.95rem}
+.switch input{width:46px;height:26px;min-height:0;appearance:none;-webkit-appearance:none;background:var(--line);border-radius:999px;position:relative;padding:0;border:0;cursor:pointer;flex:none}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:left .15s}
+.switch input:checked{background:var(--basil)}
+.switch input:checked::after{left:23px}
+details{border-top:1px solid var(--line);margin-top:10px;padding-top:8px}
+details summary{cursor:pointer;font-weight:600;font-size:.9rem;color:var(--muted)}
+.hist{display:grid;gap:10px}
+.hist .card h2{justify-content:space-between}
+.sticky-cta{position:fixed;left:0;right:0;bottom:0;padding:10px 16px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(transparent,var(--bg) 35%);display:flex;justify-content:center;z-index:4}
+.sticky-cta .btn{width:100%;max-width:520px;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+@media (min-width:820px){.sticky-cta{display:none}}
+dialog{border:1px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink);padding:0;width:min(560px,calc(100vw - 24px));max-height:calc(100vh - 40px)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog form{padding:16px}
+dialog h2{margin:0 0 12px;font-size:1.1rem}
+.print-only{display:none}
+.embedded .local-only{display:none!important}
+body:not(.embedded) .embed-only{display:none!important}
+@media print{
+  body{background:#fff;color:#000;font-size:12px}
+  nav,.sticky-cta,.no-print,#tab-datos,#tab-historial,#tab-ajustes,.btns,details{display:none!important}
+  section.tab{display:block!important}
+  .card,.kpi{box-shadow:none;border-color:#ccc;break-inside:avoid;background:#fff}
+  .print-only{display:block}
+  main{padding:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>🍕 Pizza</h1>
+  <p id="hdrSum">Calculadora y planificador de masa · tonda, teglia, pala y napoletana</p>
+</header>
+<nav><div class="in">
+  <button data-tab="datos" class="on">Datos</button>
+  <button data-tab="receta">Receta</button>
+  <button data-tab="plan">Plan</button>
+  <button data-tab="historial">Historial</button>
+  <button data-tab="ajustes">Ajustes</button>
+</div></nav>
+
+<main>
+<!-- ============ DATOS ============ -->
+<section class="tab on" id="tab-datos">
+<div class="grid two">
+  <div class="card">
+    <h2><span class="n">1</span>Tipo de pizza</h2>
+    <div class="seg" id="typeSeg"></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">2</span>¿Cuándo haces la masa?</h2>
+    <div class="seg" style="grid-template-columns:1fr 1fr">
+      <input type="radio" name="mode2" id="mdA" value="frigo" data-bind="inp.mode"><label for="mdA"><b>El día antes</b><small>con frigo, maduración lenta</small></label>
+      <input type="radio" name="mode2" id="mdB" value="directa" data-bind="inp.mode"><label for="mdB"><b>El mismo día</b><small>sin frigo, todo a temperatura ambiente</small></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div><label for="eat2">Hora de comer</label><input id="eat2" type="datetime-local" data-bind="inp.eat"></div>
+      <div><label for="start2">Empiezo a amasar</label><input id="start2" type="datetime-local" data-bind="inp.start"></div>
+    </div>
+    <p class="hint" id="modeHint"></p>
+    <div class="btns"><button class="btn sm" type="button" data-propose>Proponer hora de inicio</button></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">3</span>Horno</h2>
+    <div class="row">
+      <div><label for="oven">Tipo de horno</label><select id="oven" data-bind="inp.oven"></select></div>
+      <div><label for="ovenMax">Temperatura máxima (°C)</label><input id="ovenMax" type="number" inputmode="decimal" step="any" data-bind="inp.ovenMax"></div>
+    </div>
+    <label for="ovenNotes">Notas del horno (zonas calientes, rejilla…)</label>
+    <input id="ovenNotes" data-bind="inp.ovenNotes" placeholder="Ej.: dora más el fondo izquierdo">
+  </div>
+
+  <div class="card">
+    <h2><span class="n">4</span>Harina</h2>
+    <div class="row">
+      <div><label for="flourProfile">Perfil guardado</label><select id="flourProfile"></select></div>
+    </div>
+    <div class="row">
+      <div><label for="flourName">Nombre</label><input id="flourName" data-bind="inp.flourName"></div>
+      <div><label for="W">Fuerza W</label><input id="W" type="number" inputmode="decimal" step="any" data-bind="inp.W" placeholder="ej. 260"></div>
+      <div><label for="protein">Proteína %</label><input id="protein" type="number" inputmode="decimal" step="any" data-bind="inp.protein" placeholder="opcional"></div>
+    </div>
+    <div class="row">
+      <div><label for="flourDate">Consumo preferente</label><input id="flourDate" type="date" data-bind="inp.flourDate"></div>
+      <div data-show="teglia pala"><label for="riceP">Harina de arroz % (sobre harina total)</label><input id="riceP" type="number" inputmode="decimal" step="any" data-bind="inp.riceP.@"></div>
+    </div>
+    <p class="hint" id="wHint"></p>
+    <div class="btns"><button class="btn sm" id="saveFlour" type="button">Guardar como perfil</button><button class="btn sm ghost" id="delFlour" type="button">Borrar perfil</button></div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">5</span>Temperaturas</h2>
+    <div class="row">
+      <div><label for="tRoom">Habitación (°C)</label><input id="tRoom" type="number" inputmode="decimal" step="any" data-bind="inp.tRoom"></div>
+      <div><label for="tFlour">Harina (°C)</label><input id="tFlour" type="number" inputmode="decimal" step="any" data-bind="inp.tFlour" placeholder="= habitación"></div>
+      <div><label for="tTarget">Masa objetivo (°C)</label><input id="tTarget" type="number" inputmode="decimal" step="any" data-bind="inp.tTarget"></div>
+      <div data-mode="frigo"><label for="tFridge">Frigo (°C)</label><input id="tFridge" type="number" inputmode="decimal" step="any" data-bind="inp.tFridge"></div>
+    </div>
+    <p class="hint">Si no mides la harina, déjalo vacío y se iguala a la habitación.</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">6</span>Amasadora</h2>
+    <div class="seg three">
+      <input type="radio" name="mixer" id="mx1" value="thermomix" data-bind="inp.mixer"><label for="mx1"><b>Thermomix TM5</b><small>espiga + pieghe</small></label>
+      <input type="radio" name="mixer" id="mx2" value="planetaria" data-bind="inp.mixer"><label for="mx2"><b>Planetaria</b><small>gancho</small></label>
+      <input type="radio" name="mixer" id="mx3" value="mano" data-bind="inp.mixer"><label for="mx3"><b>A mano</b><small>bol + encimera</small></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">7</span>Cantidad de harina</h2>
+    <div data-show="teglia">
+      <div class="row">
+        <div><label for="trayL">Largo interno (cm)</label><input id="trayL" type="number" inputmode="decimal" step="any" data-bind="inp.trayL"></div>
+        <div><label for="trayW">Ancho interno (cm)</label><input id="trayW" type="number" inputmode="decimal" step="any" data-bind="inp.trayW"></div>
+      </div>
+      <div class="row">
+        <div><label for="load">Carga (g de masa/cm²)</label>
+          <select id="load" data-bind="inp.load">
+            <option value="0.6">0,60 · fina</option><option value="0.75">0,75 · estándar</option><option value="0.85">0,85 · alta / alveolada</option>
+          </select></div>
+        <div><label for="portT">Nº de moldes</label><input id="portT" type="number" inputmode="numeric" step="1" min="1" data-bind="inp.port.@"></div>
+      </div>
+    </div>
+    <div data-show="tonda pala napo">
+      <div class="row">
+        <div><label for="portB">Nº de pizzas</label><input id="portB" type="number" inputmode="numeric" step="1" min="1" data-bind="inp.port.@"></div>
+        <div><label for="ballG">Peso de cada bola (g)</label><input id="ballG" type="number" inputmode="decimal" step="any" data-bind="inp.ball.@"></div>
+      </div>
+      <p class="hint" id="ballHint"></p>
+    </div>
+    <div class="alert info" style="margin:6px 0 10px" id="flourRecBox"></div>
+    <div class="row">
+      <div><label for="flourG">Harina a usar (g)</label><input id="flourG" type="number" inputmode="decimal" step="any" data-bind="inp.flourG" placeholder="vacío = recomendada"></div>
+    </div>
+    <p class="hint" id="yieldHint"></p>
+  </div>
+
+  <div class="card">
+    <h2><span class="n">8</span>Levadura seca</h2>
+    <div class="seg three" style="grid-template-columns:1fr 1fr">
+      <input type="radio" name="ys" id="ys1" value="ok" data-bind="inp.yeastState"><label for="ys1"><b>OK</b><small>hace espuma clara</small></label>
+      <input type="radio" name="ys" id="ys2" value="dudosa" data-bind="inp.yeastState"><label for="ys2"><b>Dudosa</b><small>espuma floja · ×1,25</small></label>
+    </div>
+    <div class="row" style="margin-top:10px">
+      <div><label for="yeastOpened">Fecha de apertura</label><input id="yeastOpened" type="date" data-bind="inp.yeastOpened"></div>
+    </div>
+    <details><summary>Prueba de la levadura</summary>
+      <p class="hint">1 cucharadita en agua a 37–38 °C con una pizca de azúcar. Espera 10 min. Si no hace espuma clara, está floja: márcala como dudosa. Guárdala envasada al vacío en la nevera una vez abierta.</p>
+    </details>
+  </div>
+</div>
+</section>
+
+<!-- ============ RECETA ============ -->
+<section class="tab" id="tab-receta">
+  <div class="print-only"><h2 id="printTitle"></h2></div>
+  <div class="alerts" id="alerts"></div>
+  <div class="kpis" style="margin-bottom:12px">
+    <div class="kpi"><div class="l">Hidratación</div><div class="v" id="kHyd"></div><div class="s" id="kHydS"></div></div>
+    <div class="kpi"><div class="l">Harina total</div><div class="v" id="kFlour"></div><div class="s" id="kFlourS"></div></div>
+    <div class="kpi"><div class="l">Agua</div><div class="v" id="kWaterT"></div><div class="s" id="kWaterS"></div></div>
+    <div class="kpi"><div class="l">Precalentar</div><div class="v" id="kPre"></div><div class="s" id="kPreS"></div></div>
+  </div>
+  <div class="grid two">
+    <div class="card">
+      <h2>Receta</h2>
+      <table><thead><tr><th>Ingrediente</th><th class="r">Gramos</th><th class="r">%</th></tr></thead><tbody id="recipe"></tbody></table>
+      <p class="hint">% panadero: sobre la harina total = 100%.</p>
+    </div>
+    <div class="grid">
+      <div class="card">
+        <h2>Hidratación recomendada <span class="badge" id="hydBadge"></span></h2>
+        <ul class="why" id="hydWhy"></ul>
+      </div>
+      <div class="card">
+        <h2>Aceite de oliva</h2>
+        <label class="switch"><input type="checkbox" id="oilOn" data-bind="inp.oilOn.@"> Añadir aceite de oliva</label>
+        <p class="hint" id="oilWhy"></p>
+      </div>
+      <div class="card">
+        <h2>Levadura seca</h2>
+        <div id="yeastBox"></div>
+      </div>
+      <div class="card">
+        <h2>Horno</h2>
+        <div id="ovenBox"></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h2>Ajustes manuales <span class="muted" style="font-weight:400;font-size:.85rem">(vacío = recomendado)</span></h2>
+    <div class="row">
+      <div><label for="hydO">Hidratación %</label><input id="hydO" type="number" inputmode="decimal" step="any" data-bind="inp.hydO"></div>
+      <div><label for="saltO">Sal %</label><input id="saltO" type="number" inputmode="decimal" step="any" data-bind="inp.saltO"></div>
+      <div><label for="oilO">Aceite %</label><input id="oilO" type="number" inputmode="decimal" step="any" data-bind="inp.oilO"></div>
+      <div><label for="yeastO">Levadura seca %</label><input id="yeastO" type="number" inputmode="decimal" step="any" data-bind="inp.yeastO"></div>
+    </div>
+    <div class="btns"><button class="btn sm" id="clearOverrides" type="button">Volver a lo recomendado</button></div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h2>Cómo proceder</h2>
+    <ol class="steps" id="steps"></ol>
+  </div>
+  <div class="btns no-print">
+    <button class="btn pri" type="button" data-open-save>Guardar hornada</button>
+    <button class="btn local-only" type="button" onclick="window.print()">Imprimir receta</button>
+  </div>
+</section>
+
+<!-- ============ PLAN ============ -->
+<section class="tab" id="tab-plan">
+  <div class="grid two">
+    <div class="card">
+      <h2>Planificador</h2>
+      <div class="seg three" style="grid-template-columns:1fr 1fr;margin-bottom:10px">
+        <input type="radio" name="mode" id="md1" value="frigo" data-bind="inp.mode"><label for="md1"><b>Con frigo</b><small>maduración en nevera</small></label>
+        <input type="radio" name="mode" id="md2" value="directa" data-bind="inp.mode"><label for="md2"><b>Directa</b><small>todo a temperatura ambiente</small></label>
+      </div>
+      <div class="row">
+        <div><label for="start">Inicio (empiezo a amasar)</label><input id="start" type="datetime-local" data-bind="inp.start"></div>
+        <div><label for="eat">Hora de comer</label><input id="eat" type="datetime-local" data-bind="inp.eat"></div>
+      </div>
+      <div class="btns">
+        <button class="btn sm" type="button" data-propose>Proponer inicio</button>
+        <button class="btn sm" type="button" id="startNow">Empiezo ahora</button>
+      </div>
+      <div data-mode="frigo">
+        <h3>Recalcular sobre la marcha</h3>
+        <div class="row">
+          <div><label for="fridgeIn">La masa entró al frigo a las</label><input id="fridgeIn" type="datetime-local" data-bind="inp.fridgeIn"></div>
+        </div>
+        <div class="btns">
+          <button class="btn sm" type="button" id="fridgeNow">Entra al frigo ahora</button>
+          <button class="btn sm ghost" type="button" id="fridgeClear">Quitar</button>
+        </div>
+        <p class="hint">Si la masa tardó más en estar lista, apunta aquí la hora real: se recalculan las horas de frigo manteniendo la hora de comer.</p>
+      </div>
+      <div class="alerts" id="planAlerts" style="margin-top:12px"></div>
+      <div id="planSum"></div>
+    </div>
+    <div class="card">
+      <h2>Línea de tiempo</h2>
+      <div class="tl" id="timeline"></div>
+    </div>
+  </div>
+  <div class="card no-print" style="margin-top:12px">
+    <h2>Duración de las fases (min)</h2>
+    <div class="row" id="durFields"></div>
+    <div class="btns"><button class="btn sm" type="button" id="durReset">Restaurar duraciones</button></div>
+    <p class="hint">La fase de frigo (o la fermentación flexible en modo directo) se calcula sola con el resto de tiempo.</p>
+  </div>
+</section>
+
+<!-- ============ HISTORIAL ============ -->
+<section class="tab" id="tab-historial">
+  <div class="card" style="margin-bottom:12px">
+    <h2>Historial de hornadas</h2>
+    <p class="hint">Cada hornada guarda los parámetros usados y lo que pasó de verdad. Con las temperaturas reales de agua y masa se calibra la fricción de tu amasadora.</p>
+    <div id="calib"></div>
+    <div class="btns">
+      <button class="btn pri" type="button" data-open-save>Guardar hornada actual</button>
+      <button class="btn local-only" type="button" id="exportJson">Exportar JSON</button>
+      <button class="btn embed-only" type="button" id="copyJson">Copiar copia de seguridad</button>
+      <label class="btn" for="importJson" style="margin:0">Importar JSON</label>
+      <input type="file" id="importJson" accept="application/json,.json" hidden>
+    </div>
+    <p class="hint" id="dataMsg" role="status"></p>
+    <textarea id="backupText" class="embed-only" readonly hidden></textarea>
+  </div>
+  <div class="hist" id="histList"></div>
+</section>
+
+<!-- ============ AJUSTES ============ -->
+<section class="tab" id="tab-ajustes">
+  <div class="grid two">
+    <div class="card">
+      <h2>Fricción de amasado (°C)</h2>
+      <div class="row">
+        <div><label for="fT">Thermomix TM5</label><input id="fT" type="number" inputmode="decimal" step="any" data-bind="set.friction.thermomix"></div>
+        <div><label for="fP">Planetaria</label><input id="fP" type="number" inputmode="decimal" step="any" data-bind="set.friction.planetaria"></div>
+        <div><label for="fM">A mano</label><input id="fM" type="number" inputmode="decimal" step="any" data-bind="set.friction.mano"></div>
+      </div>
+      <p class="hint">Thermomix TM5 en tandas cortas + pieghe: 4–5 (estimado). Planetaria continua: 7–8. A mano: sin dato validado, calibra con el historial.</p>
+      <h3>Thermomix TM5</h3>
+      <div class="row"><div><label for="tmMax">Harina máxima por tanda (g)</label><input id="tmMax" type="number" inputmode="decimal" step="any" data-bind="set.tmMaxFlour"></div></div>
+      <p class="hint">1000 g: lo máximo que has amasado con tu TM5. Con tanta masa, vigila que el vaso no se caliente y termina a mano.</p>
+    </div>
+    <div class="card">
+      <h2>Modelo de levadura</h2>
+      <div class="row">
+        <div><label for="yCal">Factor de calibración</label><input id="yCal" type="number" inputmode="decimal" step="any" data-bind="set.yeastCal"></div>
+        <div><label for="yExp">Exponente tiempo</label><input id="yExp" type="number" inputmode="decimal" step="any" data-bind="set.yeastExp"></div>
+      </div>
+      <h3>Fermentación según el tipo de pizza</h3>
+      <div class="row">
+        <div><label for="tyT">Teglia</label><input id="tyT" type="number" inputmode="decimal" step="any" data-bind="set.typeYeast.teglia"></div>
+        <div><label for="tyP">Pala</label><input id="tyP" type="number" inputmode="decimal" step="any" data-bind="set.typeYeast.pala"></div>
+        <div><label for="tyN">Napoletana</label><input id="tyN" type="number" inputmode="decimal" step="any" data-bind="set.typeYeast.napo"></div>
+        <div><label for="tyR">Tonda</label><input id="tyR" type="number" inputmode="decimal" step="any" data-bind="set.typeYeast.tonda"></div>
+      </div>
+      <p class="hint">Multiplica la levadura de cada tipo respecto a la teglia (1). La tonda apenas debe crecer, por eso lleva menos.</p>
+      <p class="hint">Anclado a tu caso validado: 0,18% para teglia W200 70%, ~27 h con ~19 h de frigo a 4 °C y ~25 °C de ambiente. El cálculo simula cómo se enfría y se calienta la masa según su peso. Si con levadura nueva la masa va demasiado rápida, baja el factor (ej. 0,7); si va lenta, súbelo.</p>
+    </div>
+    <div class="card">
+      <h2>Ventanas de frigo por harina (h)</h2>
+      <div class="row">
+        <div><label>W &lt; 230</label><div class="inline"><input type="number" step="any" data-bind="set.win.low.0"><input type="number" step="any" data-bind="set.win.low.1"></div></div>
+        <div><label>W 230–289</label><div class="inline"><input type="number" step="any" data-bind="set.win.mid.0"><input type="number" step="any" data-bind="set.win.mid.1"></div></div>
+      </div>
+      <div class="row">
+        <div><label>W 290–339</label><div class="inline"><input type="number" step="any" data-bind="set.win.high.0"><input type="number" step="any" data-bind="set.win.high.1"></div></div>
+        <div><label>W ≥ 340</label><div class="inline"><input type="number" step="any" data-bind="set.win.vhigh.0"><input type="number" step="any" data-bind="set.win.vhigh.1"></div></div>
+      </div>
+      <p class="hint">Mínimo y máximo. Solo W≈200 está validado (16–20 h); el resto son heurísticas.</p>
+    </div>
+    <div class="card">
+      <h2>Datos</h2>
+      <p class="hint">Todo se guarda solo en este navegador. Exporta el JSON desde Historial para tener copia.</p>
+      <div class="btns">
+        <button class="btn" type="button" id="resetSettings">Restaurar ajustes por defecto</button>
+        <button class="btn" type="button" id="resetAll">Borrar todo</button>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<div class="sticky-cta no-print" id="cta"><button class="btn pri" type="button" data-goto="receta">Ver receta →</button></div>
+
+<dialog id="saveDlg">
+  <form method="dialog" id="saveForm">
+    <h2>Guardar hornada</h2>
+    <div class="row">
+      <div><label for="hDate">Fecha</label><input id="hDate" type="date" name="date"></div>
+      <div><label for="hFridge">Horas reales de frigo</label><input id="hFridge" type="number" step="any" name="fridgeH"></div>
+    </div>
+    <div class="row">
+      <div><label for="hTw">T real del agua (°C)</label><input id="hTw" type="number" step="any" name="tWater"></div>
+      <div><label for="hTd">T real de la masa al acabar (°C)</label><input id="hTd" type="number" step="any" name="tDough"></div>
+    </div>
+    <div class="row">
+      <div><label for="hAlv">Alveolado (1–5)</label><select id="hAlv" name="alv"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      <div><label for="hBase">Base (1–5)</label><select id="hBase" name="base"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+      <div><label for="hColor">Color (1–5)</label><select id="hColor" name="color"><option></option><option>1</option><option>2</option><option>3</option><option>4</option><option>5</option></select></div>
+    </div>
+    <label for="hTimes">Tiempos reales de cada fase</label>
+    <textarea id="hTimes" name="times" placeholder="Ej.: puntata 2 h 40, reposo 1 h 30 (estaba relajada)…"></textarea>
+    <label for="hNotes" style="margin-top:10px">Resultado y ajustes para la próxima vez</label>
+    <textarea id="hNotes" name="notes"></textarea>
+    <div class="btns" style="justify-content:flex-end">
+      <button class="btn ghost" value="cancel" type="submit" formnovalidate>Cancelar</button>
+      <button class="btn pri" value="ok" type="submit">Guardar</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+/* ===================== Datos base ===================== */
+const TYPES = {
+  tonda:  {name:'Tonda romana', sub:'fina y crujiente (scrocchiarella)', portion:'ball', ball:180, salt:2.5, oilBase:4,  oilRef:58, rice:0, hyd:{low:55,mid:57,high:60}, range:[52,63], size:'~30–32 cm, estirada con rodillo', port:4},
+  teglia: {name:'Teglia romana', sub:'en molde, alta y alveolada', portion:'tray', salt:2.8, oilBase:2, oilRef:70, rice:5, hyd:{low:70,mid:72,high:75}, range:[65,80], port:1},
+  pala:   {name:'Pizza alla pala', sub:'alargada, muy hidratada', portion:'ball', ball:450, salt:2.6, oilBase:2, oilRef:75, rice:5, hyd:{low:70,mid:74,high:78}, range:[68,82], size:'~25×45 cm (piedra doméstica)', port:2},
+  napo:   {name:'Napoletana', sub:'blanda, cornicione, sin aceite', portion:'ball', ball:250, salt:2.8, oilBase:0, oilRef:62, rice:0, hyd:{low:58,mid:62,high:65}, range:[56,70], size:'~30–33 cm, estirada a mano', port:4},
+};
+const OVENS = {
+  dom_static:{name:'Doméstico estático (arriba y abajo)', max:250, preheat:[20,25], domestic:true, surface:'none'},
+  dom_fan:   {name:'Doméstico ventilado', max:250, preheat:[15,20], domestic:true, surface:'none'},
+  dom_stone: {name:'Doméstico + piedra refractaria', max:275, preheat:[45,60], domestic:true, surface:'stone'},
+  dom_steel: {name:'Doméstico + acero para pizza', max:275, preheat:[40,50], domestic:true, surface:'steel'},
+  electric:  {name:'Eléctrico de pizza (piedra, 400 °C)', max:400, preheat:[15,25], domestic:false},
+  gas:       {name:'De pizza a gas (portátil)', max:500, preheat:[20,30], domestic:false},
+  wood:      {name:'De leña', max:480, preheat:[60,120], domestic:false},
+};
+const MIXER_NAME = {thermomix:'Thermomix TM5', planetaria:'planetaria', mano:'a mano'};
+const MIX_DUR = {thermomix:50, planetaria:40, mano:55};
+const DUR = {
+  teglia:{puntata:150, reposo:120, estirado:60, segunda:55},
+  pala:  {puntata:150, staglio:15, reposo:150},
+  tonda: {puntata:60,  staglio:15, reposo:150},
+  napo:  {puntata:120, staglio:15, reposo:240},
+};
+const DUR_LABEL = {mezcla:'Mezcla y amasado', puntata:'Puntata (con pieghe si aplica)', staglio:'Staglio (bolas)', reposo:'Reposo ambiente tras frigo', estirado:'Estirado en teglia', segunda:'Segunda fermentación'};
+const DIRECT_H = {teglia:8, pala:8, tonda:8, napo:9};   // horas recomendadas de inicio a comida en el mismo día
+
+
+const DEF_INP = {
+  type:'teglia', oven:'dom_static', ovenMax:250, ovenNotes:'',
+  flourName:'Zamorana', W:200, protein:'', flourDate:'',
+  riceP:{teglia:5, pala:5},
+  tRoom:22, tFlour:'', tTarget:24, tFridge:4, mixer:'thermomix',
+  trayL:35, trayW:25, load:'0.85',
+  port:{tonda:4, teglia:1, pala:2, napo:4}, ball:{tonda:180, pala:450, napo:250},
+  flourG:'', hydO:'', saltO:'', oilO:'', yeastO:'',
+  oilOn:{tonda:true, teglia:true, pala:true, napo:false},
+  yeastState:'ok', yeastOpened:'',
+  mode:'frigo', start:'', eat:'', fridgeIn:'', dur:{}
+};
+const DEF_SET = {
+  friction:{thermomix:5, planetaria:8, mano:2}, tmMaxFlour:1000,
+  v:3, yeastCal:1, yeastExp:1.05,
+  typeYeast:{teglia:1, pala:1, napo:0.55, tonda:0.38},
+  win:{low:[14,20], mid:[16,30], high:[24,48], vhigh:[24,72]}
+};
+
+/* ===================== Estado ===================== */
+const LS = 'pizzaRomana.v1';
+const clone = o => JSON.parse(JSON.stringify(o));
+function merge(a,b){ for(const k in b){ if(b[k] && typeof b[k]==='object' && !Array.isArray(b[k]) && a[k] && typeof a[k]==='object' && !Array.isArray(a[k])) merge(a[k],b[k]); else a[k]=b[k]; } return a; }
+function defaults(){ return {inp:clone(DEF_INP), set:clone(DEF_SET), flours:[{id:'zam', name:'Zamorana', W:200, protein:'', date:'', notes:'W200 mínimo garantizado. Validada en teglia al 70%.'}], hist:[]}; }
+function load(){
+  try{ const j = JSON.parse(localStorage.getItem(LS)); if(j) return merge(defaults(), migrate(j)); }catch(e){}
+  return defaults();
+}
+// v2: nuevo modelo térmico de levadura; descarta los parámetros del modelo anterior
+function migrate(j){
+  if(j.set && !(j.set.v>=2)){ delete j.set.yeastExp; delete j.set.typeYeast; delete j.set.fridgeFactor; }
+  // v3: la TM5 del usuario amasa 1 kg de harina; sustituye el antiguo límite por defecto de 500 g
+  if(j.set && !(j.set.v>=3) && Number(j.set.tmMaxFlour)===500) delete j.set.tmMaxFlour;
+  if(j.set) delete j.set.v;
+  return j;
+}
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(S)); }catch(e){} }
+let S = load();
+
+/* ===================== Utilidades ===================== */
+// confirm() que funciona también donde el navegador no muestra diálogos: entonces pide tocar dos veces
+function ask(msg, btn){
+  const t0=Date.now(); let r=false;
+  try{ r=window.confirm(msg); }catch(e){}
+  if(r) return true;
+  if(Date.now()-t0>40) return false;          // el diálogo se mostró y se canceló
+  if(!btn) return true;
+  if(btn.dataset.armed){ delete btn.dataset.armed; btn.textContent=btn.dataset.label; return true; }
+  btn.dataset.label=btn.textContent; btn.dataset.armed='1'; btn.textContent='Toca otra vez para confirmar';
+  setTimeout(()=>{ if(btn.dataset.armed){ delete btn.dataset.armed; btn.textContent=btn.dataset.label; } },4000);
+  return false;
+}
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const num = (v,d=null) => { if(v===''||v==null) return d; const n=parseFloat(String(v).replace(',','.')); return isNaN(n)?d:n; };
+const clamp = (x,a,b) => Math.min(b,Math.max(a,x));
+const r1 = x => Math.round(x*10)/10;
+const f = (n,d=0) => Number(n).toLocaleString('es-ES',{minimumFractionDigits:d,maximumFractionDigits:d});
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const toLocalInput = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const parseDT = s => { if(!s) return null; const d=new Date(s); return isNaN(d)?null:d; };
+const hm = d => `${pad(d.getHours())}:${pad(d.getMinutes())}`;
+const day = d => d.toLocaleDateString('es-ES',{weekday:'short'}).replace('.','');
+const dur = m => { m=Math.round(m); const h=Math.floor(Math.abs(m)/60), mm=Math.abs(m)%60; return (m<0?'−':'')+(h?`${h} h${mm?' '+mm:''}`:`${mm} min`); };
+// Actividad de la levadura relativa a 24 °C (Q10 ≈ 2,5; casi nula cerca de 0 °C, máximo útil hacia 32 °C)
+const rate = T => T<=1 ? 0 : Math.pow(2,(Math.min(T,32)-24)/7.5) * (T<6 ? (T-1)/5 : 1);
+// Constante de tiempo térmica (h) de una pieza de masa de m gramos en un recipiente: crece con el tamaño (m^2/3)
+const tauOf = m => clamp(1.5*Math.pow(Math.max(m,50)/250,2/3),0.6,6);
+const TAU_SHEET = 0.4;   // masa extendida en la teglia
+// Simula la temperatura de la masa por tramos (paso de 5 min) y suma horas-equivalentes a 24 °C
+function simulate(segs,T0){
+  let T=T0, E=0;
+  for(const sg of segs){
+    sg.T0=T; let left=sg.min;
+    while(left>0){ const h=Math.min(5,left)/60; const Tn=sg.env+(T-sg.env)*Math.exp(-h/sg.tau); E+=rate((T+Tn)/2)*h; T=Tn; left-=h*60; }
+    sg.T1=T;
+  }
+  return {E,T};
+}
+// Caso validado: teglia 25×35 (743,75 g de masa), ambiente 25 °C, masa a 24 °C, frigo 4 °C 19,4 h → 0,18 %
+const EREF = (()=>{ const tau=tauOf(743.75); return simulate([
+  {min:50,env:24,tau:1},{min:150,env:25,tau},{min:1163,env:4,tau},{min:120,env:25,tau},{min:60,env:25,tau:TAU_SHEET},{min:55,env:25,tau:TAU_SHEET}],24).E; })();
+const mid = a => (a[0]+a[1])/2;
+
+function ensureDates(){
+  if(!parseDT(S.inp.start) || !parseDT(S.inp.eat)){
+    const s=new Date(); s.setHours(18,0,0,0);
+    const e=new Date(s); e.setDate(e.getDate()+1); e.setHours(21,0,0,0);
+    S.inp.start=toLocalInput(s); S.inp.eat=toLocalInput(e);
+  }
+}
+
+/* ===================== Horno ===================== */
+function bakeInfo(type, ok, M){
+  const o=OVENS[ok], s=o.surface, dom=o.domestic, surf = s==='steel'?'acero':'piedra';
+  const b={preheat:[...o.preheat], rec: dom?(s==='none'?3:5):1, temp:'', min:[0,0], rack:'', notes:[]};
+  const set=(temp,min,rack,notes)=>Object.assign(b,{temp,min,rack,notes});
+  if(type==='teglia'){
+    if(ok==='dom_static') set(`${Math.min(M,250)} °C, arriba y abajo`,[20,22],'Rejilla baja',['Desde el minuto 15 vigila. El horno es irregular: gira la teglia 180° si dora desigual.','Si arriba está pálida y abajo lista, súbela al estante superior 2–3 min finales, muy vigilado.']);
+    else if(ok==='dom_fan') set(`${Math.min(M,240)} °C con ventilador`,[16,20],'Rejilla media-baja',['El ventilador seca más la superficie: vigila desde el minuto 12.','Gira la teglia 180° a mitad si dora desigual.']);
+    else if(dom) set(`${Math.min(M,250)} °C`,[15,18],`Teglia directamente sobre la ${surf}, en la parte baja`,['La base se hace antes: levanta una esquina con espátula desde el minuto 10.','Si la base está lista y arriba pálida, sube la teglia a la parte alta para terminar.']);
+    else set('Llama al mínimo: suelo a ~280–320 °C',[10,14],'Teglia en la zona menos caliente',['No es su horno ideal: gira la teglia cada 2–3 min.','Mide el suelo con termómetro infrarrojo: por encima de 330 °C la base se quema antes de cocer la miga.','Tras precalentar, baja la llama 5–10 min antes de meter la teglia.']);
+  } else if(type==='tonda'){
+    if(dom && s==='none'){ b.preheat=[30,40]; set(`Máximo (${M} °C)`,[8,10],'Bandeja del horno boca abajo, precalentada dentro, en la rejilla baja',['Desliza la pizza sobre la bandeja caliente (con papel de horno si no tienes pala).','Último minuto con gratinador si la superficie va pálida.']); }
+    else if(dom) set(`Máximo (${M} °C)`, s==='steel'?[5,7]:[6,8], `${surf==='acero'?'Acero':'Piedra'} en la rejilla media-alta (~15 cm del techo)`,['Gratinador los últimos 1–2 min para dorar arriba.','Deja recuperar la '+surf+' ~5 min entre pizzas.']);
+    else set(`Suelo a ${Math.min(M,380)>=330?'330–380':Math.min(M,380)} °C (no al máximo)`,[2,3],'Sobre el suelo del horno',['La tonda quiere una cocción algo más larga y suave que la napolitana para quedar crujiente: si se tuesta antes de 2 min, baja la llama.','Gira la pizza cada 30–40 s.']);
+  } else if(type==='pala'){
+    if(dom && s==='none'){ b.preheat=[30,40]; set(`Máximo (${M} °C)`,[12,15],'Bandeja boca abajo precalentada, rejilla baja',['Mejor con piedra o acero: sin ellos la base queda menos crujiente.','Opcional: precocción 6–7 min solo con un poco de tomate, sacar, montar y terminar 4–6 min.']); }
+    else if(dom) set(`Máximo (${M} °C)`, s==='steel'?[8,10]:[9,12], `${surf==='acero'?'Acero':'Piedra'} en la rejilla baja-media`,['Gratinador el último 1–2 min si arriba va pálida.','Opcional: precocción con poco tomate y terminar con los ingredientes.']);
+    else set('Suelo a 320–360 °C',[3,5],'Sobre el suelo, lejos de la llama',['Gira cada minuto: la pala es larga y se tuesta desigual.']);
+  } else { // napo
+    if(dom && s==='none'){ b.preheat=[30,40]; set(`Máximo (${M} °C) + gratinador al final`,[7,9],'Bandeja boca abajo precalentada, rejilla alta',['En horno doméstico no hay leoparding real: cuanto más caliente la superficie, mejor.','Mozzarella escurrida y añadida a mitad de cocción para que no suelte agua.']); }
+    else if(dom) set(`Máximo (${M} °C) con gratinador`, s==='steel'?[4,6]:[5,7], `${surf==='acero'?'Acero':'Piedra'} en la rejilla más alta que permita la pizza (~10 cm del techo)`,['Enciende el gratinador al máximo 5 min antes de meter cada pizza.','Deja recuperar la '+surf+' 5–8 min entre pizzas.']);
+    else if(M>=430) set('Suelo 400–430 °C, cúpula 450–480 °C',[1,1.5],'Sobre el suelo, cerca de la llama',['Gira la pizza cada 15–20 s.','Mide el suelo con infrarrojo: por encima de 450 °C se quema la base.']);
+    else set(`Máximo (${M} °C)`,[1.5,3],'Sobre el suelo, cerca de la llama',['Tu horno no llega a 430 °C: la cocción será algo más larga y la pizza más seca.']);
+  }
+  if(ok==='wood') b.notes.push('Precalienta hasta que la cúpula se vuelva blanca y luego aparta las brasas a un lado.');
+  return b;
+}
+
+/* ===================== Plan ===================== */
+function buildPlan(I,C,T,bake,count,tRoom,tTarget,tier,tFridge,mass){
+  const t=I.type, isBall=T.portion==='ball', direct=I.mode==='directa';
+  const d={...DUR[t], mezcla:MIX_DUR[I.mixer], ...(I.dur[t]||{})};
+  for(const k in d) d[k]=num(d[k],0);
+  const front=[{k:'mezcla', l:'Mezcla y amasado', m:d.mezcla, z:'f'},
+               {k:'puntata', l:(isBall&&t!=='pala')?'Fermentación en bloque (puntata)':'Pieghe di rinforzo + fermentación en bloque (puntata)', m:d.puntata, z:'f'}];
+  if(isBall) front.push({k:'staglio', l:t==='pala'?'Staglio: formar los panetti':'Staglio: dividir y bolear', m:d.staglio, z:'f'});
+  let back;
+  if(t==='teglia'){
+    back=[...(direct?[]:[{k:'reposo', l:'Reposo a temperatura ambiente (tapada)', m:d.reposo, z:'r'}]),
+          {k:'estirado', l:'Estirado en la teglia (2–3 tandas)', m:d.estirado, z:'r'},
+          {k:'segunda', l:'Segunda fermentación en el molde', m:d.segunda, z:'r'},
+          {k:'horno', l:`Horneado${count>1?` (${count} moldes)`:''}`, m:bake.min[1]*count, z:'b'}];
+  } else {
+    const lab = direct ? {tonda:'Appretto: bolas a temperatura ambiente', napo:'Appretto: bolas a temperatura ambiente', pala:'Appretto: panetti a temperatura ambiente'}[t]
+                       : {tonda:'Atemperar las bolas (tapadas)', napo:'Appretto: bolas a temperatura ambiente', pala:'Atemperar los panetti (tapados)'}[t];
+    back=[{k:'reposo', l:lab, m:d.reposo, z:'r'},
+          {k:'horno', l:`Estirar, montar y hornear (${count} pizza${count>1?'s':''})`, m:Math.round(count*(mid(bake.min)+bake.rec)+5), z:'b'}];
+  }
+  const start=parseDT(I.start), eat=parseDT(I.eat);
+  const total=(eat-start)/60000;
+  const sum=a=>a.reduce((s,p)=>s+p.m,0);
+  let frontMin=sum(front); const backMin=sum(back);
+  const baseFront=frontMin, baseBack=backMin;
+  const win=C.win[tier].map(Number);
+  const out={front,back,frontMin,backMin,total,start,eat,win,fridge:0,ok:true,msgs:[],direct};
+  if(!start||!eat||total<=0){ out.ok=false; out.msgs.push(['bad','La hora de comer tiene que ser posterior a la de inicio.']); out.E=EREF; return out; }
+
+  if(direct){
+    const flex=total-frontMin-backMin;
+    const target = isBall? back[0] : front[1];
+    if(flex<0){ out.ok=false; out.msgs.push(['bad',`Falta tiempo: necesitas al menos ${dur(frontMin+backMin)} entre inicio y comida.`]); }
+    else target.m+=flex;
+    if(flex>=0) target.l += ' (fase flexible)';
+    out.flex=flex;
+    const amb=(total-backMin)/60;
+    if(flex>=0 && total<5*60) out.msgs.push(['info',`Masa rápida (${dur(total)}): saldrá bien, pero con menos sabor y digestibilidad que con más horas. Si puedes, empieza antes.`]);
+    if(amb>14 && tRoom>=20) out.msgs.push(['warn',`Son ${f(amb,0)} h a temperatura ambiente: con tan poca levadura la masa es delicada. Con frigo controlas mejor.`]);
+  } else {
+    const fi=parseDT(I.fridgeIn);
+    if(fi && fi>start && fi<eat){
+      const real=(fi-start)/60000, extra=real-frontMin;
+      front[1].m=Math.max(0,front[1].m+extra); front[1].l+=' (real)';
+      frontMin=real; out.fridgeOverride=true;
+    }
+    out.fridge=total-frontMin-backMin;
+    const fh=out.fridge/60;
+    if(out.fridge<0){ out.ok=false; out.msgs.push(['bad',`Falta tiempo: con frigo necesitas al menos ${dur(frontMin+backMin+win[0]*60)}. Cambia a masa directa o empieza antes.`]); }
+    else if(fh<win[0]) out.msgs.push(['warn',`Frigo de ${f(fh,1)} h: por debajo de la ventana de esta harina (${win[0]}–${win[1]} h). Empieza antes o reduce la espera.`]);
+    else if(fh>win[1]) out.msgs.push(['warn',`Frigo de ${f(fh,1)} h: supera la ventana de esta harina (${win[0]}–${win[1]} h). Empieza más tarde o usa harina más fuerte.`]);
+  }
+  out.frontMin=frontMin;
+  // Temperatura real de la masa fase a fase → horas-equivalentes a 24 °C
+  const tauBulk=tauOf(mass.bulk), tauPiece=tauOf(mass.piece);
+  const segs=[];
+  for(const p of front) segs.push({k:p.k, min:p.m, env:p.k==='mezcla'?tTarget:tRoom, tau:p.k==='staglio'?tauPiece:(p.k==='mezcla'?1:tauBulk)});
+  if(!direct && out.fridge>0) segs.push({k:'frigo', min:out.fridge, env:tFridge, tau:tauPiece});
+  for(const p of back) if(p.z==='r') segs.push({k:p.k, min:p.m, env:tRoom, tau:(p.k==='estirado'||p.k==='segunda')?TAU_SHEET:tauPiece});
+  const sim=simulate(segs,tTarget);
+  out.E=Math.max(sim.E,0.3); out.segs=segs; out.tauPiece=tauPiece; out.tauBulk=tauBulk; out.Tbake=sim.T;
+  // propuesta de inicio: duraciones base + frigo en el centro de la ventana
+  out.proposed = new Date(eat - (direct ? Math.max(baseFront+baseBack, DIRECT_H[t]*60) : baseFront+baseBack+mid(win)*60)*60000);
+  out.minMin = baseFront+baseBack;
+  return out;
+}
+
+/* ===================== Cálculo principal ===================== */
+function compute(){
+  ensureDates();
+  const I=S.inp, C=S.set, T=TYPES[I.type], O=OVENS[I.oven]||OVENS.dom_static;
+  const R={warn:[], hydWhy:[], T, O};
+  const M=num(I.ovenMax,O.max);
+  let W=num(I.W), prot=num(I.protein), Wsrc='';
+  if(W==null && prot!=null){ W=Math.round(50*prot-350); Wsrc=' (estimada por proteína)'; }
+  if(W==null){ W=250; Wsrc=' (supuesta)'; R.warn.push(['info','Sin W ni proteína: se asume W250. Mira la etiqueta o la ficha del fabricante.']); }
+  const tier = W<230?'low':W<290?'mid':W<340?'high':'vhigh', ht=tier==='vhigh'?'high':tier;
+  R.W=W; R.Wsrc=Wsrc; R.tier=tier;
+  const tRoom=num(I.tRoom,22), tFlour=num(I.tFlour,tRoom), tTarget=num(I.tTarget,24);
+  R.tRoom=tRoom; R.tFlour=tFlour; R.tTarget=tTarget;
+
+  // ---- Hidratación
+  let hydRec=T.hyd[ht];
+  R.hydWhy.push(`${T.name} con W${W}${Wsrc}: base ${hydRec}%.`);
+  if(I.type==='napo' && O.domestic){ hydRec+=3; R.hydWhy.push('Horno doméstico (cocción de varios minutos): +3 puntos para que no quede seca.'); }
+  if(tRoom>=28){ hydRec-=1; R.hydWhy.push('Ambiente caluroso (≥28 °C): −1 punto, la masa se relaja antes.'); }
+  hydRec=clamp(hydRec,T.range[0],T.range[1]);
+  if(I.type==='teglia' && tier==='low') R.hydWhy.push('Validado: W200 al 70% salió bien. El 75% solo con vigilancia (margen mínimo sin biga).');
+  if(I.mixer==='mano' && hydRec>=72) R.hydWhy.push('A mano con hidratación alta: reserva el último 10% del agua y añádelo poco a poco (bassinage).');
+  if(prot!=null && num(I.W)!=null && Math.abs((50*prot-350)-W)>90) R.warn.push(['info',`La proteína (${prot}%) y la W (${W}) no cuadran mucho. Se usa la W: es mejor indicador de fuerza.`]);
+  const hyd=num(I.hydO,hydRec);
+  R.hydRec=hydRec; R.hyd=hyd;
+
+  // ---- Sal
+  const salt=num(I.saltO,T.salt);
+
+  // ---- Aceite
+  const oilOn = I.oilOn[I.type] ?? (T.oilBase>0);
+  let oilRec, oilWhy;
+  if(T.oilBase>0){
+    oilRec=clamp(r1(T.oilBase+(T.oilRef-hyd)*0.1),0.5,7);
+    if(I.type==='tonda' && O.domestic) oilRec=r1(oilRec+0.5);
+    oilWhy=`Base ${f(T.oilBase,1)}% para ${T.name} a ${T.oilRef}% de hidratación; ${hyd>T.oilRef?'con más agua la masa ya es extensible y necesita menos aceite':hyd<T.oilRef?'con menos agua, algo más de aceite para que se estire y quede crujiente':'estás en la hidratación de referencia'}${I.type==='tonda'&&O.domestic?'; +0,5 en horno doméstico para dorar y dar crujiente':''}. Recomendado: ${f(oilRec,1)}%.`;
+  } else {
+    oilRec = O.domestic?2:1;
+    oilWhy = `La napoletana tradicional no lleva aceite en la masa. ${O.domestic?'En horno doméstico, un 2% ayuda a dorar y a que la cocción larga no la reseque: es opcional.':'En horno de alta temperatura no hace falta.'}`;
+  }
+  const oil = oilOn ? num(I.oilO,oilRec) : 0;
+  R.oilOn=oilOn; R.oilRec=oilRec; R.oilWhy=oilWhy;
+
+  // ---- Arroz
+  const riceCap={low:5,mid:7,high:8}[ht];
+  const usesRice = I.type==='teglia'||I.type==='pala';
+  const rice = usesRice ? num(I.riceP[I.type], Math.min(T.rice,riceCap)) : 0;
+  if(usesRice && rice>riceCap) R.warn.push(['warn',`Arroz al ${f(rice,1)}% con W${W}: más arroz = menos gluten. Máximo orientativo ${riceCap}% para esta harina.`]);
+
+  // ---- Porciones (recuento aproximado para el plan)
+  const count = Math.max(1,Math.round(num(I.port[I.type],T.port)));
+  const ballG = num(I.ball[I.type],T.ball);
+  const area = num(I.trayL,0)*num(I.trayW,0), load=num(I.load,0.85);
+  const doughRec = T.portion==='tray' ? area*load*count : ballG*count;
+
+  // ---- Horno + plan + levadura
+  const bake=bakeInfo(I.type,I.oven,M);
+  let planCount=count;
+  if(num(I.flourG)!=null && T.portion==='ball'){ const est=num(I.flourG)*(1+hyd/100+salt/100+oil/100+0.002)/ballG; planCount=Math.max(1,Math.round(est)); }
+  const tFridge=num(I.tFridge,4); R.tFridge=tFridge;
+  const doughApprox = num(I.flourG)!=null ? num(I.flourG)*(1+hyd/100+salt/100+oil/100+0.0015) : doughRec;
+  const mass = T.portion==='tray' ? {bulk:doughApprox/count, piece:doughApprox/count} : {bulk:doughApprox, piece:ballG};
+  const P=buildPlan(I,C,T,bake,planCount,tRoom,tTarget,tier,tFridge,mass);
+  const typeF=num(C.typeYeast?.[I.type],DEF_SET.typeYeast[I.type]);
+  let yeastRec=0.18*Math.pow(EREF/P.E,num(C.yeastExp,1.05))*typeF*num(C.yeastCal,1)*(I.yeastState==='dudosa'?1.25:1);
+  R.typeF=typeF;
+  const yeastClamped = yeastRec<0.03||yeastRec>1.5;
+  yeastRec=clamp(yeastRec,0.03,1.5);
+  const yeast=num(I.yeastO,yeastRec);
+  if(yeastClamped) R.warn.push(['warn','La levadura calculada se sale del rango útil: revisa los tiempos del plan.']);
+  if(I.mode!=='directa' && P.ok){
+    if(tFridge>7) R.warn.push(['warn',`Frigo a ${f(tFridge,0)} °C: la masa sigue fermentando bastante. La levadura ya está reducida, pero vigila que no se pase; lo ideal es 2–5 °C.`]);
+    if(tFridge<1) R.warn.push(['warn',`Frigo a ${f(tFridge,0)} °C: la levadura casi se para y la masa podría congelarse en los bordes.`]);
+    if(P.Tbake<15) R.warn.push(['warn',`Al estirar, la masa aún estará a unos ${f(P.Tbake,0)} °C: fría y elástica. Alarga el reposo tras el frigo o sácala antes.`]);
+  }
+
+  // ---- Cantidades
+  const factor=1+hyd/100+salt/100+yeast/100+oil/100;
+  const flourRec=doughRec/factor;
+  const flour=num(I.flourG,flourRec);
+  const dough=flour*factor;
+  const riceG=flour*rice/100;
+  Object.assign(R,{salt,oil,rice,yeast,yeastRec,factor,flourRec,flour,dough,riceG,strong:flour-riceG,water:flour*hyd/100,saltG:flour*salt/100,oilG:flour*oil/100,yeastG:flour*yeast/100,count,ballG,area,load,doughRec,bake,P,M});
+  R.fresh=R.yeastG*3;
+  if(num(I.flourG)!=null){
+    R.yieldTxt = T.portion==='tray'
+      ? `Con ${f(flour)} g de harina salen ${f(dough)} g de masa → carga ${f(dough/count/(area||1),2)} g/cm² en ${count} molde${count>1?'s':''} de ${f(area)} cm².`
+      : `Con ${f(flour)} g de harina salen ${f(dough)} g de masa → ${f(dough/ballG,1)} bolas de ${f(ballG)} g.`;
+  }
+
+  // ---- Temperatura del agua
+  const fric=num(C.friction[I.mixer],5);
+  const tw=3*tTarget-tRoom-tFlour-fric;
+  R.fric=fric; R.tw=tw;
+  if(tw<4) R.warn.push(['bad',`Agua a ${f(tw,0)} °C: no se alcanza solo con agua. Usa cubitos pesados dentro del total del agua y enfría la harina en la nevera.`]);
+  else if(tw>35) R.warn.push(['warn',`Agua a ${f(tw,0)} °C: no pongas la levadura en contacto directo con ella; mézclala con la harina.`]);
+
+  // ---- Avisos
+  if(hyd>T.hyd[ht]+3 && tier==='low') R.warn.push(['warn',`Hidratación ${f(hyd,0)}% con W${W}: alta para una harina floja. Refuerza con pieghe y vigila que no se rasgue.`]);
+  if(hyd<T.range[0]||hyd>T.range[1]) R.warn.push(['warn',`Hidratación ${f(hyd,0)}% fuera del rango típico de ${T.name} (${T.range[0]}–${T.range[1]}%).`]);
+  if(I.type==='pala' && W<260) R.warn.push(['warn',`La pala pide harina fuerte (W≥280). Con W${W} y ${f(hyd,0)}% será difícil de manejar.`]);
+  if(I.type==='napo' && W<230) R.warn.push(['info',`Napoletana con W${W}: válida para masa directa corta; para frigo largo usa W 260–320.`]);
+  if(I.type==='napo' && O.domestic) R.warn.push(['info','Napoletana en horno doméstico: es una adaptación. Receta y tiempos ajustados para cocción larga.']);
+  if(I.type==='teglia' && !O.domestic) R.warn.push(['info','La teglia está pensada para horno doméstico; en horno de pizza hay que trabajar con la llama baja.']);
+  if(I.mixer==='thermomix' && flour>num(C.tmMaxFlour,1000)) R.warn.push(['warn',`${f(flour)} g de harina supera lo que has amasado con tu Thermomix TM5 (${f(num(C.tmMaxFlour,1000))} g): haz dos tandas.`]);
+  if(I.flourDate){ const fd=new Date(I.flourDate+'T23:59'); if(fd<new Date()) R.warn.push(['warn','Harina pasada de fecha: huélela (rancio, cartón húmedo, ácido) y busca grumos o bichos. Si al amasar se rompe antes o se estira menos, su W real es menor → acorta el frigo a 14–16 h.']); }
+  if(I.yeastState==='dudosa') R.warn.push(['info','Levadura dudosa: dosis multiplicada por 1,25. Haz la prueba de espuma antes.']);
+  else if(I.yeastOpened){ const days=(new Date()-new Date(I.yeastOpened))/864e5; if(days>120) R.warn.push(['info',`La levadura lleva ${f(days,0)} días abierta: haz la prueba de espuma.`]); }
+  R.warn.push(...P.msgs);
+  return R;
+}
+
+/* ===================== Pasos ===================== */
+function mixSteps(R){
+  const I=S.inp, g=x=>`${f(x)} g`, lowW=R.tier==='low';
+  const flours = R.riceG>0 ? `harina de fuerza (${g(R.strong)}) + harina de arroz (${g(R.riceG)})` : `harina (${g(R.flour)})`;
+  const hot = R.tw>35;
+  const yeastTxt = `levadura seca (${f(R.yeastG,2)} g)`;
+  const oilTxt = R.oilG>0 ? `el aceite (${f(R.oilG,1)} g) en hilo` : null;
+  const bassinage = R.hyd>=70;
+  const w1 = bassinage ? R.water*0.9 : R.water, w2 = R.water-w1;
+  const tw = `${f(Math.max(R.tw,0),0)} °C`;
+  if(I.mixer==='thermomix') return [
+    ['Mezcla inicial en Thermomix TM5', [`En el vaso de la TM5: toda el agua (${g(R.water)} a ${tw})${hot?'':` + ${yeastTxt}`} + ${flours}${hot?` + ${yeastTxt} mezclada con la harina`:''}.`, 'Modo amasar (<b>espiga</b>) hasta masa homogénea sin bolitas. No uses velocidad 3: a 15 s se forman bolitas.']],
+    ['Reposo 30 min', ['Dentro del vaso, tapado. Con la levadura ya dentro no es autolisis pura: es mezcla inicial + reposo.']],
+    ['Sal y aceite', [`Primero la sal (${f(R.saltG,1)} g) con 1 min de espiga.`, oilTxt?`Después ${oilTxt} con la máquina en espiga.`:'Sin aceite en esta masa.']],
+    ['Tandas finales', ['1–2 tandas de 2 min de espiga + 1 min de descanso (máx. 3 en total contando la anterior). Para si el vaso se calienta.', 'Termina a mano hasta masa lisa.', ...(R.flour>700?['Con tanta masa (cerca de 1 kg) el vaso se calienta antes y el motor va más forzado: tandas más cortas y más trabajo a mano.']:[]), lowW?'Harina floja: usa la máquina lo mínimo.':'Busca masa lisa y elástica; no hace falta velo completo si luego hay pieghe.']],
+  ];
+  if(I.mixer==='planetaria') return [
+    ['Mezcla inicial con gancho', [`Bol: ${flours} + ${yeastTxt}, mezcladas en seco.`, `Añade ${bassinage?`el 90% del agua (${g(w1)})`:`toda el agua (${g(R.water)})`} a ${tw}.`, 'Velocidad 1, 2–3 min hasta que no quede harina seca.']],
+    ['Reposo 20–30 min', ['Tapado en el bol.']],
+    ['Sal, agua reservada y aceite', [`Velocidad 1–2: añade la sal (${f(R.saltG,1)} g).`, bassinage?`Luego el agua reservada (${g(w2)}) poco a poco: no añadas más hasta que la masa absorba la anterior.`:null, oilTxt?`Al final, ${oilTxt}.`:null].filter(Boolean)],
+    ['Amasado', [R.hyd<62?'Masa firme: velocidad 1–2 durante 8–10 min hasta que esté lisa.':'Amasa hasta que se despegue del bol y esté lisa (6–10 min en total).', 'Mide la masa: no debería pasar de 26 °C. '+(lowW?'Con W bajo, para en cuanto esté lisa.':'')]],
+  ];
+  return [
+    ['Mezcla a mano', [`En un bol: ${bassinage?`el 90% del agua (${g(w1)})`:`toda el agua (${g(R.water)})`} a ${tw}${hot?'':` con la ${yeastTxt} disuelta`}.`, `Añade ${flours}${hot?` con la ${yeastTxt} mezclada`:''} y mezcla con espátula o la mano hasta que no quede harina seca.`]],
+    ['Reposo 30 min', ['Tapado.']],
+    ['Sal y aceite', [`Añade la sal (${f(R.saltG,1)} g)${bassinage?` con el agua reservada (${g(w2)})`:''}, pellizcando la masa hasta integrarla.`, oilTxt?`Después ${oilTxt}, en 2–3 veces, integrando cada vez.`:null].filter(Boolean)],
+    ['Amasado', [R.hyd>=66?'Slap & fold (levantar, golpear y plegar) sobre la encimera sin harina, 5–8 min, hasta que esté lisa. Si se pega mucho, descansos de 5 min.':'Amasa 8–10 min empujando con la base de la mano y plegando, hasta masa lisa y elástica.', 'La fricción a mano no está validada: anota la temperatura real de la masa al acabar para calibrar.']],
+  ];
+}
+function steps(R){
+  const I=S.inp, t=I.type, P=R.P, g=x=>`${f(x)} g`, B=R.bake;
+  const fh = P.fridge>0 ? `${f(P.fridge/60,1)} h` : `${R.P.win[0]}–${R.P.win[1]} h`;
+  const tFind = k => [...P.front,...P.back].find(p=>p.k===k);
+  const out = mixSteps(R);
+  const rest = tFind('reposo'), punt = tFind('puntata');
+  const preTxt = `Precalienta ${B.preheat[0]}–${B.preheat[1]} min: ${B.temp}. ${B.rack}.`;
+  const bakeTxt = `Hornea ${f(B.min[0],B.min[0]%1?1:0)}–${f(B.min[1],B.min[1]%1?1:0)} min${t==='napo'&&!R.O.domestic?' (minutos)':''}.`;
+  if(t==='teglia'){
+    out.push(['Pieghe di rinforzo', ['2–3 series como máximo, cada 25–30 min.', 'Serie: estira cada lado hacia arriba y dóblalo sobre el centro, gira el bol 90° y repite por los 4 lados.', 'Para cuando esté lisa, con tensión superficial y visiblemente más voluminosa. Más series de las necesarias rasgan una malla ya débil.']]);
+    out.push(['Fermentación en bloque (puntata)', P.direct
+      ? [`Tapada a temperatura ambiente hasta que casi doble su volumen (≈${dur(punt.m)} contando las pieghe).`, 'Manda el tacto y el volumen, no el reloj: si a la hora prevista no ha crecido, espera; si va muy rápida, pásala antes a la teglia.']
+      : [`Hasta verla asentada y crecida: manda el tacto y el volumen, no solo el reloj (≈${dur(punt.m)} desde el inicio contando las pieghe).`]]);
+    if(!P.direct) out.push(['Frigo', [`${fh} en recipiente tapado y algo aceitado.`]]);
+    if(!P.direct) out.push(['Reposo a temperatura ambiente', [`${dur(rest.m)}, tapada.`, 'Si al sacarla está muy relajada o pegajosa, acorta este reposo; si está tensa, dáselo entero.']]);
+    out.push(['Estirado en la teglia', ['Teglia metálica con bordes, aceitada generosamente.', 'Dedos aceitados: empuja desde el centro hacia fuera sin apretar el aire hacia los bordes.', '2–3 tandas con 15–20 min de reposo tapada entre cada una (~45–60 min en total).']]);
+    out.push(['Segunda fermentación en el molde', [`${dur(tFind('segunda').m)}, hasta que esté visiblemente hinchada.`, preTxt+' Solápalo con esta fase.']]);
+    out.push(['Horneado', [bakeTxt, ...B.notes]]);
+  } else if(t==='pala'){
+    out.push(['Pieghe di rinforzo', ['3 series cada 20–30 min (la pala va muy hidratada y las necesita).', 'Para cuando la masa esté lisa y con tensión.']]);
+    out.push(['Puntata y panetti', [`Puntata hasta que esté crecida (≈${dur(punt.m)}).`, `Forma ${R.count} panetti de ${g(R.ballG)} plegando sobre sí mismos, en recipientes rectangulares aceitados y tapados.`]]);
+    if(!P.direct) out.push(['Frigo', [`${fh}.`]]);
+    out.push([P.direct?'Appretto':'Atemperar', [`${dur(rest.m)} tapados a temperatura ambiente${P.direct?', hasta que estén hinchados':''}.`, preTxt]]);
+    out.push(['Estirado', ['Vuelca cada panetto sobre la encimera con mucha sémola de grano duro.', 'Pulsa con las yemas estirando a lo largo, sin desgasificar los bordes, hasta ~25×45 cm.', 'Pásala a la pala con un movimiento rápido, monta y al horno.']]);
+    out.push(['Horneado', [bakeTxt, ...B.notes]]);
+  } else if(t==='tonda'){
+    out.push(['Fermentación en bloque (puntata)', [`${dur(punt.m)} tapada.`]]);
+    out.push(['Staglio', [`Divide en ${R.count} bolas de ${g(R.ballG)} y bolea bien apretadas.`, 'En tupper ligeramente aceitado, bien cerrado.']]);
+    if(!P.direct) out.push(['Frigo', [`${fh}.`]]);
+    out.push([P.direct?'Appretto':'Atemperar', [P.direct?`${dur(rest.m)} tapadas a temperatura ambiente, hasta que se relajen y crezcan.`:`Saca las bolas ${dur(rest.m)} antes, tapadas.`, preTxt]]);
+    out.push(['Estirado con rodillo', ['Encimera con un poco de sémola o harina.', 'Estira con rodillo desde el centro, girando la masa, hasta 2–3 mm y ~30–32 cm. Sin cornicione: el borde casi no existe.', 'Monta con poca cantidad: la tonda es fina y se empapa.']]);
+    out.push(['Horneado', [bakeTxt, ...B.notes]]);
+  } else {
+    out.push(['Fermentación en bloque (puntata)', [`${dur(punt.m)} tapada.`]]);
+    out.push(['Staglio', [`Divide en ${R.count} bolas de ${g(R.ballG)} y bolea con tensión.`, 'En cajas de bolas o tuppers individuales tapados.']]);
+    if(!P.direct) out.push(['Frigo', [`${fh}.`]]);
+    out.push([P.direct?'Appretto':'Atemperar (appretto)', [`${dur(rest.m)} a temperatura ambiente, tapadas, hasta que las bolas se relajen y crezcan.`, preTxt]]);
+    out.push(['Estirado a mano', ['Sobre sémola o harina: presiona desde el centro hacia fuera dejando 1,5–2 cm de cornicione sin tocar.', 'Nunca rodillo: echa el aire del borde fuera de la pizza.']]);
+    out.push(['Horneado', [bakeTxt, ...B.notes]]);
+  }
+  return out;
+}
+
+/* ===================== Render ===================== */
+function render(){
+  const R=compute(), I=S.inp, T=R.T, P=R.P;
+  $$('[data-show]').forEach(el=>el.hidden=!el.dataset.show.split(' ').includes(I.type));
+  $$('[data-mode]').forEach(el=>el.hidden=el.dataset.mode!==I.mode);
+  $('#hdrSum').textContent = `${T.name} · ${I.mode==='directa'?'mismo día':'con frigo'} · ${R.O.name[0].toLowerCase()+R.O.name.slice(1)} · W${R.W} · ${MIXER_NAME[I.mixer]}`;
+  $('#modeHint').innerHTML = !P.ok ? `<b style="color:var(--bad)">Revisa las horas:</b> ${P.msgs.filter(m=>m[0]==='bad').map(m=>m[1]).join(' ')}`
+    : I.mode==='directa'
+      ? `Mismo día: <b>${dur(P.total)}</b> desde que amasas hasta comer (recomendado ~${DIRECT_H[I.type]} h, mínimo ${dur(P.minMin)}). Levadura recalculada: <b>${f(R.yeastG,2)} g (${f(R.yeast,2)}%)</b>.`
+      : `Con frigo: <b>${f(P.fridge/60,1)} h</b> de nevera (ventana de esta harina ${P.win[0]}–${P.win[1]} h). Levadura: <b>${f(R.yeastG,2)} g (${f(R.yeast,2)}%)</b>.`;
+  $('#printTitle').textContent = `${T.name} — ${f(R.flour)} g de harina, ${f(R.hyd,0)}%`;
+
+  // Datos: pistas
+  $('#wHint').textContent = `Fuerza ${{low:'baja (W<230)',mid:'media (230–289)',high:'alta (290–339)',vhigh:'muy alta (≥340)'}[R.tier]}${R.Wsrc}. Ventana de frigo orientativa: ${R.P.win[0]}–${R.P.win[1]} h.`;
+  $('#ballHint').textContent = T.portion==='ball' ? `Recomendado para ${T.name}: ${T.ball} g por pizza (${T.size}).` : '';
+  $('#flourRecBox').innerHTML = T.portion==='tray'
+    ? `<b>Harina recomendada: ${f(R.flourRec)} g</b> — ${f(R.area)} cm² × ${f(R.load,2)} g/cm² × ${R.count} = ${f(R.doughRec)} g de masa.`
+    : `<b>Harina recomendada: ${f(R.flourRec)} g</b> — ${R.count} × ${f(R.ballG)} g = ${f(R.doughRec)} g de masa.`;
+  $('#flourG').placeholder = `vacío = ${f(R.flourRec)} g`;
+  $('#yieldHint').textContent = R.yieldTxt || '';
+
+  // Avisos
+  const alertHTML = a => a.map(([k,m])=>`<div class="alert ${k}"><b>${k==='bad'?'Atención':k==='warn'?'Aviso':'Nota'}:</b> ${m}</div>`).join('');
+  $('#alerts').innerHTML = alertHTML(R.warn);
+
+  // KPIs
+  $('#kHyd').textContent = `${f(R.hyd,R.hyd%1?1:0)}%`;
+  $('#kHydS').textContent = num(I.hydO)!=null ? `manual (recomendado ${R.hydRec}%)` : 'recomendada';
+  $('#kFlour').textContent = `${f(R.flour)} g`;
+  $('#kFlourS').textContent = `${f(R.dough)} g de masa`;
+  $('#kWaterT').textContent = `${f(Math.max(R.tw,0),0)} °C`;
+  $('#kWaterS').textContent = `${f(R.water)} g · fricción ${f(R.fric,0)} °C`;
+  $('#kPre').textContent = `${R.bake.preheat[0]}–${R.bake.preheat[1]} min`;
+  $('#kPreS').textContent = R.bake.temp;
+
+  // Receta
+  const row=(n,g,p,cls='',dec=0)=>`<tr class="${cls}"><td>${n}</td><td class="r g">${f(g,dec)} g</td><td class="r">${p==null?'':f(p,p<1&&p>0?2:1)+'%'}</td></tr>`;
+  let h='';
+  if(R.riceG>0){ h+=row('Harina de fuerza',R.strong,100-R.rice); h+=row('Harina de arroz',R.riceG,R.rice); }
+  else h+=row('Harina',R.flour,100);
+  h+=row(`Agua <span class="muted">a ${f(Math.max(R.tw,0),0)} °C</span>`,R.water,R.hyd);
+  h+=row('Sal',R.saltG,R.salt,'',1);
+  h+= R.oilOn ? row('Aceite de oliva virgen extra',R.oilG,R.oil,'',1) : `<tr class="off"><td>Aceite de oliva</td><td class="r">—</td><td class="r">0%</td></tr>`;
+  h+=row(`Levadura seca <span class="muted">(fresca: ${f(R.fresh,1)} g)</span>`,R.yeastG,R.yeast,'',2);
+  h+=`<tr class="total"><td>Masa total</td><td class="r">${f(R.dough)} g</td><td class="r">${f(R.factor*100,1)}%</td></tr>`;
+  $('#recipe').innerHTML=h;
+
+  $('#hydBadge').textContent = `${R.hydRec}%`;
+  $('#hydWhy').innerHTML = R.hydWhy.map(x=>`<li>${x}</li>`).join('');
+  $('#oilWhy').textContent = R.oilOn ? R.oilWhy : `Sin aceite. ${R.oilWhy}`;
+
+  let tempTrace='';
+  if(P.segs){
+    const fr=P.segs.find(x=>x.k==='frigo');
+    const piece = T.portion==='tray' ? `bloque de ${f(R.dough/R.count)} g` : `bolas de ${f(R.ballG)} g`;
+    if(fr){ const tCold=fr.tau*Math.log(Math.max(1.01,(fr.T0-fr.env)/2));
+      tempTrace=`<li>Temperatura estimada de la masa (${piece}): entra al frigo a ~${f(fr.T0,0)} °C y tarda ~${f(Math.min(tCold,fr.min/60),1)} h en bajar a ${f(fr.env+2,0)} °C; sale a ~${f(fr.T1,0)} °C y al hornear estará a ~${f(P.Tbake,0)} °C.</li>`; }
+    else tempTrace=`<li>Temperatura estimada de la masa: empieza a ${f(R.tTarget,0)} °C y al hornear estará a ~${f(P.Tbake,0)} °C (ambiente ${f(R.tRoom,0)} °C).</li>`;
+  }
+  $('#yeastBox').innerHTML = `<div class="big">${f(R.yeastG,2)} g</div>
+    <p class="hint" style="margin-top:4px">${f(R.yeast,2)}% sobre harina${num(I.yeastO)!=null?` (manual; modelo ${f(R.yeastRec,2)}%)`:''} · fresca equivalente ${f(R.fresh,1)} g (×3).</p>
+    <ul class="why">
+      <li><b>Por kilo de harina: ${f(R.yeastG/R.flour*1000,2)} g.</b></li>
+      <li>Proceso de ${dur(P.total)}${P.direct?' a temperatura ambiente':` con ${f(Math.max(P.fridge,0)/60,1)} h de frigo a ${f(R.tFridge,0)} °C`}: equivale a ${f(P.E,1)} h de fermentación a 24 °C.</li>
+      ${tempTrace}
+      <li>Referencia validada: teglia con 0,18% ≈ ${f(EREF,1)} h equivalentes. Más horas o más calor → menos levadura.</li>
+      ${R.typeF!==1?`<li>${T.name}: ${I.type==='tonda'?'masa fina y crujiente, necesita poco crecimiento':'necesita menos crecimiento que la teglia'} → ×${f(R.typeF,2)}.</li>`:''}
+      ${I.yeastState==='dudosa'?'<li>Levadura dudosa: ×1,25.</li>':''}
+      <li>Pésala con báscula de 0,01 g.</li>
+    </ul>`;
+
+  const B=R.bake;
+  $('#ovenBox').innerHTML = `<div class="big">${B.preheat[0]}–${B.preheat[1]} min</div>
+    <p class="hint" style="margin-top:4px">de precalentado · ${R.O.name}</p>
+    <ul class="why"><li><b>Temperatura:</b> ${B.temp}</li><li><b>Posición:</b> ${B.rack}</li><li><b>Cocción:</b> ${f(B.min[0],B.min[0]%1?1:0)}–${f(B.min[1],B.min[1]%1?1:0)} min${T.portion==='ball'?' por pizza':''}</li>
+    ${R.O.surface&&R.O.surface!=='none'?`<li>La ${R.O.surface==='steel'?'placa de acero':'piedra'} necesita todo ese tiempo para cargarse de calor: el termostato apagado no significa que esté lista.</li>`:''}
+    ${I.ovenNotes?`<li>Tus notas: ${esc(I.ovenNotes)}</li>`:''}</ul>`;
+
+  $('#steps').innerHTML = steps(R).map(([t,items])=>`<li><b class="t">${t}</b><ul>${items.map(x=>`<li>${x}</li>`).join('')}</ul></li>`).join('');
+
+  // Plan
+  $('#planAlerts').innerHTML = alertHTML(P.msgs);
+  if(P.ok){
+    $('#planSum').innerHTML = P.direct
+      ? `<div class="kpi"><div class="l">Total a temperatura ambiente</div><div class="v">${dur(P.total)}</div><div class="s">levadura ${f(R.yeastG,2)} g (${f(R.yeast,2)}%)</div></div>`
+      : `<div class="kpi"><div class="l">Horas de frigo</div><div class="v">${f(P.fridge/60,1)} h <span class="badge ${P.fridge/60<P.win[0]||P.fridge/60>P.win[1]?'w':''}">ventana ${P.win[0]}–${P.win[1]} h</span></div><div class="s">proceso total ${dur(P.total)} · levadura ${f(R.yeastG,2)} g (${f(R.yeast,2)}%)</div></div>`;
+  } else $('#planSum').innerHTML='';
+  // Línea de tiempo
+  let tl='', cur=new Date(P.start);
+  const item=(d,label,dm,cls='')=>`<div class="it ${cls}"><div class="h">${hm(d)}<small>${day(d)}</small></div><div>${label}</div><div class="d">${dm?dur(dm):''}</div></div>`;
+  if(P.ok){
+    const preheatAt = new Date(P.eat - P.back.at(-1).m*60000 - B.preheat[1]*60000);
+    const evs=[];
+    for(const p of P.front){ evs.push([new Date(cur),p.l,p.m]); cur=new Date(+cur+p.m*60000); }
+    if(!P.direct){ evs.push([new Date(cur),'Frigo',P.fridge,'fr']); cur=new Date(+cur+P.fridge*60000); evs.push([new Date(cur),'Sacar del frigo','', 'ev']); }
+    for(const p of P.back){ evs.push([new Date(cur),p.l,p.m]); cur=new Date(+cur+p.m*60000); }
+    evs.push([preheatAt,`Encender el horno (${B.temp})`,'','ev']);
+    evs.push([P.eat,'¡A comer!','','eat']);
+    evs.sort((a,b)=>a[0]-b[0]);
+    tl=evs.map(e=>item(...e)).join('');
+    tl+=`<div class="btns no-print"><button class="btn sm" type="button" data-open-save>Guardar hornada</button><button class="btn sm local-only" type="button" onclick="window.print()">Imprimir</button></div>`;
+  }
+  $('#timeline').innerHTML = tl || '<p class="muted">Ajusta las horas para ver el plan.</p>';
+  // Duraciones
+  const flexKey = I.mode==='directa' ? (T.portion==='ball'?'reposo':'puntata') : null;
+  const keys=['mezcla',...Object.keys(DUR[I.type])].filter(k=>!(I.mode==='directa' && I.type==='teglia' && k==='reposo'));
+  const dd={...DUR[I.type], mezcla:MIX_DUR[I.mixer], ...(I.dur[I.type]||{})};
+  const durHTML = keys.map(k=>`<div><label>${k===flexKey?DUR_LABEL[k]+' (mínimo; se alarga sola)':(I.mode==='directa'&&k==='reposo'?'Appretto':DUR_LABEL[k])}</label><input type="number" inputmode="numeric" step="1" data-dur="${k}" value="${esc(dd[k])}"></div>`).join('');
+  const box=$('#durFields');
+  if(box.dataset.sig!==I.type+I.mixer+I.mode || !box.contains(document.activeElement)){ box.innerHTML=durHTML; box.dataset.sig=I.type+I.mixer+I.mode; }
+
+  renderHist();
+  window.__R = R;
+}
+
+function fillInputs(){
+  $$('[data-bind]').forEach(el=>{
+    const [o,k]=resolve(el.dataset.bind); const v=o[k];
+    if(el.type==='radio') el.checked = el.value===v;
+    else if(el.type==='checkbox') el.checked = v ?? (TYPES[S.inp.type].oilBase>0);
+    else el.value = v ?? '';
+  });
+  renderFlourSelect();
+}
+function resolve(path){
+  const parts=path.replace('@',S.inp.type).split('.'); let o=S;
+  for(let i=0;i<parts.length-1;i++){ if(o[parts[i]]==null) o[parts[i]]={}; o=o[parts[i]]; }
+  return [o,parts.at(-1)];
+}
+
+/* ===================== Perfiles de harina ===================== */
+function renderFlourSelect(){
+  const sel=$('#flourProfile');
+  sel.innerHTML='<option value="">— elegir —</option>'+S.flours.map(fl=>`<option value="${esc(fl.id)}">${esc(fl.name)} · W${esc(fl.W||'?')}</option>`).join('');
+  const m=S.flours.find(fl=>fl.name===S.inp.flourName && String(fl.W)===String(S.inp.W));
+  sel.value=m?m.id:'';
+}
+$('#flourProfile').addEventListener('change',e=>{
+  const fl=S.flours.find(x=>x.id===e.target.value); if(!fl) return;
+  Object.assign(S.inp,{flourName:fl.name, W:fl.W, protein:fl.protein, flourDate:fl.date});
+  save(); fillInputs(); render();
+});
+$('#saveFlour').addEventListener('click',()=>{
+  const name=(S.inp.flourName||'').trim()||'Harina';
+  let fl=S.flours.find(x=>x.name===name);
+  if(!fl){ fl={id:'f'+Date.now(), name}; S.flours.push(fl); }
+  Object.assign(fl,{W:S.inp.W, protein:S.inp.protein, date:S.inp.flourDate});
+  save(); renderFlourSelect();
+});
+$('#delFlour').addEventListener('click',()=>{
+  const id=$('#flourProfile').value; if(!id) return;
+  if(!ask('¿Borrar este perfil de harina?', $('#delFlour'))) return;
+  S.flours=S.flours.filter(x=>x.id!==id); save(); renderFlourSelect();
+});
+
+/* ===================== Historial ===================== */
+function renderHist(){
+  const list=$('#histList');
+  if(!S.hist.length){ list.innerHTML='<p class="muted">Aún no hay hornadas guardadas.</p>'; $('#calib').innerHTML=''; return; }
+  list.innerHTML=S.hist.slice().reverse().map(h=>{
+    const p=h.params, r=h.result, x=h.real||{};
+    const stars=k=>x[k]?`${k==='alv'?'Alveolado':k==='base'?'Base':'Color'} ${x[k]}/5`:'';
+    return `<div class="card"><h2><span>${esc(h.date)} · ${esc(TYPES[p.type]?.name||p.type)}</span><button class="btn sm ghost" type="button" data-del="${h.id}">Borrar</button></h2>
+      <div class="muted" style="font-size:.88rem">${esc(p.flourName)} W${esc(r.W)} · ${f(r.hyd,1)}% · ${f(r.flour)} g harina · levadura ${f(r.yeastG,2)} g (${f(r.yeast,2)}%) · aceite ${f(r.oil,1)}% · ${esc(MIXER_NAME[p.mixer]||p.mixer)} · ${esc(OVENS[p.oven]?.name||'')}</div>
+      <div style="font-size:.88rem;margin-top:6px">Ambiente ${esc(p.tRoom)} °C · harina ${esc(p.tFlour||p.tRoom)} °C · agua calc. ${f(r.tw,0)} °C${x.tWater?` / real ${esc(x.tWater)} °C`:''}${x.tDough?` · masa real ${esc(x.tDough)} °C`:''} · frigo ${x.fridgeH?esc(x.fridgeH)+' h (real)':f(r.fridgeH,1)+' h (plan)'}</div>
+      ${[stars('alv'),stars('base'),stars('color')].filter(Boolean).length?`<div style="margin-top:6px">${[stars('alv'),stars('base'),stars('color')].filter(Boolean).map(s=>`<span class="badge">${s}</span>`).join(' ')}</div>`:''}
+      ${x.times?`<p style="margin:8px 0 0;font-size:.9rem"><b>Tiempos:</b> ${esc(x.times)}</p>`:''}
+      ${x.notes?`<p style="margin:6px 0 0;font-size:.9rem"><b>Notas:</b> ${esc(x.notes)}</p>`:''}
+      <div class="btns"><button class="btn sm" type="button" data-reuse="${h.id}">Cargar estos datos</button></div></div>`;
+  }).join('');
+  // Calibración de fricción
+  const by={};
+  for(const h of S.hist){ const x=h.real||{}, p=h.params; const tw=num(x.tWater), td=num(x.tDough); if(tw==null||td==null) continue;
+    const fr=3*td-num(p.tRoom,22)-num(p.tFlour,num(p.tRoom,22))-tw; (by[p.mixer]??=[]).push(fr); }
+  const ks=Object.keys(by);
+  $('#calib').innerHTML = ks.length ? '<div class="alert info"><b>Fricción medida:</b> '+ks.map(k=>{const a=by[k].reduce((s,v)=>s+v,0)/by[k].length; return `${MIXER_NAME[k]||k} ${f(a,1)} °C (${by[k].length} hornada${by[k].length>1?'s':''}) <button class="btn sm" type="button" data-fric="${k}:${r1(a)}">Aplicar</button>`;}).join(' · ')+'</div>' : '';
+}
+document.addEventListener('click',e=>{
+  const t=e.target.closest('button,[data-goto]'); if(!t) return;
+  if(t.dataset.tab) return showTab(t.dataset.tab);
+  if(t.dataset.goto) return showTab(t.dataset.goto);
+  if('openSave' in t.dataset) return openSave();
+  if('propose' in t.dataset) return proposeStart();
+  if(t.dataset.del){ if(ask('¿Borrar esta hornada?', t)){ S.hist=S.hist.filter(h=>String(h.id)!==t.dataset.del); save(); render(); } return; }
+  if(t.dataset.reuse){ const h=S.hist.find(h=>String(h.id)===t.dataset.reuse); if(h){ const keep={start:S.inp.start,eat:S.inp.eat,fridgeIn:''}; S.inp=merge(clone(DEF_INP),h.params); Object.assign(S.inp,keep); save(); fillInputs(); render(); showTab('datos'); } return; }
+  if(t.dataset.fric){ const [k,v]=t.dataset.fric.split(':'); S.set.friction[k]=Number(v); save(); fillInputs(); render(); return; }
+});
+function openSave(){
+  const R=window.__R, F=$('#saveForm');
+  F.reset(); F.date.value=new Date().toISOString().slice(0,10);
+  if(R.P.fridge>0) F.fridgeH.value=r1(R.P.fridge/60);
+  F.tWater.value=Math.round(R.tw);
+  $('#saveDlg').showModal();
+}
+$('#saveDlg').addEventListener('close',()=>{
+  if($('#saveDlg').returnValue!=='ok') return;
+  const R=window.__R, F=$('#saveForm'), fd=Object.fromEntries(new FormData(F));
+  S.hist.push({id:Date.now(), date:fd.date, params:clone(S.inp),
+    result:{W:R.W, hyd:R.hyd, flour:R.flour, water:R.water, salt:R.salt, oil:R.oil, rice:R.rice, yeast:R.yeast, yeastG:R.yeastG, tw:R.tw, fridgeH:Math.max(0,R.P.fridge)/60, dough:R.dough},
+    real:fd});
+  save(); render(); showTab('historial');
+});
+$('#exportJson').addEventListener('click',()=>{
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=`pizza-romana-${new Date().toISOString().slice(0,10)}.json`; a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+});
+$('#copyJson').addEventListener('click',async()=>{
+  const txt=JSON.stringify(S), ta=$('#backupText');
+  try{ await navigator.clipboard.writeText(txt); $('#dataMsg').textContent='Copia copiada. Pégala en una nota o mensaje para guardarla; para recuperarla, guárdala como archivo .json e impórtala.'; ta.hidden=true; }
+  catch(e){ ta.value=txt; ta.hidden=false; ta.focus(); ta.select(); $('#dataMsg').textContent='Selecciona y copia el texto de abajo.'; }
+});
+$('#importJson').addEventListener('change',async e=>{
+  const file=e.target.files[0]; if(!file) return;
+  try{ const j=JSON.parse(await file.text()); if(!ask('Esto sustituye tus datos actuales por los del archivo. ¿Continuar?')) return; S=merge(defaults(),j); save(); fillInputs(); render(); $('#dataMsg').textContent='Datos importados.'; }
+  catch(err){ $('#dataMsg').textContent='No se pudo leer el archivo: '+err.message+'. Comprueba que es una copia exportada desde esta app.'; }
+  e.target.value='';
+});
+
+/* ===================== Eventos ===================== */
+function showTab(name){
+  $$('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===name));
+  $$('section.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+name));
+  $('#cta').hidden = name!=='datos';
+  try{ sessionStorage.setItem('pizzaTab',name); }catch(e){}
+  window.scrollTo({top:0});
+}
+document.addEventListener('input',e=>{
+  const el=e.target;
+  if(el.dataset.dur){ const t=S.inp.type; (S.inp.dur[t]??={})[el.dataset.dur]=el.value; save(); render(); return; }
+  const b=el.dataset.bind; if(!b) return;
+  if(el.type==='radio' && !el.checked) return;
+  const [o,k]=resolve(b);
+  o[k] = el.type==='checkbox' ? el.checked : el.value;
+  if(b==='inp.oven'){ S.inp.ovenMax=OVENS[el.value].max; $('#ovenMax').value=S.inp.ovenMax; }
+  $$(`[data-bind="${b}"]`).forEach(x=>{ if(x===el) return; if(x.type==='radio') x.checked=x.value===o[k]; else if(x.type==='checkbox') x.checked=o[k]; else x.value=o[k]; });
+  if(b==='inp.mode'){ S.inp.fridgeIn=''; render(); proposeStart(); return; }
+  save();
+  if(b==='inp.type'){ fillInputs(); }
+  render();
+});
+$('#clearOverrides').addEventListener('click',()=>{ Object.assign(S.inp,{hydO:'',saltO:'',oilO:'',yeastO:''}); save(); fillInputs(); render(); });
+function proposeStart(){ const P=window.__R.P; if(!P.proposed||isNaN(P.proposed)) return; S.inp.start=toLocalInput(P.proposed); S.inp.fridgeIn=''; save(); fillInputs(); render(); }
+$('#startNow').addEventListener('click',()=>{ S.inp.start=toLocalInput(new Date()); S.inp.fridgeIn=''; save(); fillInputs(); render(); });
+$('#fridgeNow').addEventListener('click',()=>{ S.inp.fridgeIn=toLocalInput(new Date()); save(); fillInputs(); render(); });
+$('#fridgeClear').addEventListener('click',()=>{ S.inp.fridgeIn=''; save(); fillInputs(); render(); });
+$('#durReset').addEventListener('click',()=>{ delete S.inp.dur[S.inp.type]; $('#durFields').dataset.sig=''; save(); render(); });
+$('#resetSettings').addEventListener('click',e=>{ if(ask('¿Restaurar los ajustes por defecto?', e.currentTarget)){ S.set=clone(DEF_SET); save(); fillInputs(); render(); } });
+$('#resetAll').addEventListener('click',e=>{ if(ask('¿Borrar TODO (datos, perfiles e historial)? Exporta antes si quieres copia.', e.currentTarget)){ S=defaults(); save(); fillInputs(); render(); } });
+
+/* ===================== Inicio ===================== */
+(function init(){
+  try{ if(window.self!==window.top) document.body.classList.add('embedded'); }catch(e){ document.body.classList.add('embedded'); }
+  $('#oven').innerHTML=Object.entries(OVENS).map(([k,o])=>`<option value="${k}">${o.name}</option>`).join('');
+  $('#typeSeg').innerHTML=Object.entries(TYPES).map(([k,t],i)=>`<input type="radio" name="type" id="ty${i}" value="${k}" data-bind="inp.type"><label for="ty${i}"><b>${t.name}</b><small>${t.sub}</small></label>`).join('');
+  ensureDates(); fillInputs(); render();
+  let tab='datos'; try{ tab=sessionStorage.getItem('pizzaTab')||'datos'; }catch(e){}
+  showTab(tab);
+})();
+</script>
+</body>
+</html>
